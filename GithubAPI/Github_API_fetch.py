@@ -1,8 +1,6 @@
 import os
 import requests
 from datetime import date
-from dotenv import load_dotenv
-from collections import Counter
 from datetime import datetime, timedelta
 
 # Needs to use personal token to access github API
@@ -15,9 +13,11 @@ def fetch_repo(date):
     print(date)
     # Initialize a list to store repositories
     repos_list = []
+
+    # Maximum of 100 per page can be loaded, so we iterate over 10 pages where each page gives us 100 repositories
     for i in range(1,11):
         
-        # url for Github API for repositories created after 2025-05-14
+        # url for Github API for repositories created during specified date
         # Not archieved and with a maximum of 100 results
         url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=100&page={i}"
 
