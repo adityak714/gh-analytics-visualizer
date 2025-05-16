@@ -1,0 +1,66 @@
+import os
+import requests
+from datetime import date
+from dotenv import load_dotenv
+from collections import Counter
+from datetime import datetime, timedelta
+
+# Needs to use personal token to access github API
+# Make one with Environment Variables
+token = os.getenv("GITHUB_TOKEN")
+headers = {"Authorization": f"token {token}"}
+
+# Fetches and returns a list of repositories 
+def fetch_repo(date):
+    print(date)
+    # Initialize a list to store repositories
+    repos_list = []
+    for i in range(1,11):
+        
+        # url for Github API for repositories created after 2025-05-14
+        # Not archieved and with a maximum of 100 results
+        url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=100&page={i}"
+
+        # Make a Get request to the Github API
+        repos = requests.get(url,headers=headers)
+
+        # Check if response is OK
+        if repos.status_code != 200:
+            print(f"Error: Received status code {repos.status_code} for URL: {url}")
+            break
+
+        try:
+            repos = repos.json()
+        except requests.exceptions.JSONDecodeError:
+            print(f"Error: Invalid JSON response for URL: {url}")
+            break
+        
+        # Store all repositories in "items"
+        items = repos.get("items",[])
+
+        # If there are no more repositories, we break the loop
+        if not items:
+            break
+
+        # Add the repositories to the list
+        repos_list.extend(items)
+    return repos_list
+
+
+# Set dates where we want to fetch repositories
+start_date = datetime.strptime("2025-05-10", "%Y-%m-%d")
+todays_date = datetime.strptime(date.today().strftime("%Y-%m-%d"), "%Y-%m-%d")
+
+repo_list = []
+
+# Looping through all dates from starting until todays date.
+while start_date <= todays_date:
+    repo_list.extend(fetch_repo(start_date.strftime("%Y-%m-%d")))
+    start_date += timedelta(days=1)
+
+print(len(repo_list))
+
+
+
+
+
