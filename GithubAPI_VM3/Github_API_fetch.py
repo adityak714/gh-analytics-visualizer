@@ -2,7 +2,7 @@ import os
 import requests
 from datetime import date
 from datetime import datetime, timedelta
-from producet_VM3 import send_to_pulsar
+from producent_VM3 import send_to_pulsar
 
 # Needs to use personal token to access github API
 # Make one with Environment Variables
