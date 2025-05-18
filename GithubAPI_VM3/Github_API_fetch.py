@@ -11,7 +11,7 @@ headers = {"Authorization": f"token {token}"}
 
 # Fetches and returns a list of repositories 
 def fetch_repo(date):
-    #print(date)
+    print("Current date: "+date)
     # Initialize a list to store repositories
     repos_list = []
 
@@ -47,20 +47,6 @@ def fetch_repo(date):
         repos_list.extend(items)
     return repos_list
 
-
-# Set dates where we want to fetch repositories
-start_date = datetime.strptime("2025-05-10", "%Y-%m-%d")
-todays_date = datetime.strptime(date.today().strftime("%Y-%m-%d"), "%Y-%m-%d")
-
-repo_list = []
-
-# Looping through all dates from starting until todays date.
-while start_date <= todays_date:
-    repo_list.extend(fetch_repo(start_date.strftime("%Y-%m-%d")))
-    start_date += timedelta(days=1)
-
-
-send_to_pulsar(repo_list)
 
 
 
