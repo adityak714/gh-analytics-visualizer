@@ -2,6 +2,7 @@ import os
 import requests
 from datetime import date
 from datetime import datetime, timedelta
+from producet_VM3 import send_to_pulsar
 
 # Needs to use personal token to access github API
 # Make one with Environment Variables
@@ -10,7 +11,7 @@ headers = {"Authorization": f"token {token}"}
 
 # Fetches and returns a list of repositories 
 def fetch_repo(date):
-    print(date)
+    #print(date)
     # Initialize a list to store repositories
     repos_list = []
 
@@ -58,9 +59,8 @@ while start_date <= todays_date:
     repo_list.extend(fetch_repo(start_date.strftime("%Y-%m-%d")))
     start_date += timedelta(days=1)
 
-print(len(repo_list))
 
-
+send_to_pulsar(repo_list)
 
 
 
