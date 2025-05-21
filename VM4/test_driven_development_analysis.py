@@ -67,16 +67,24 @@ def check_test_and_ci_files(repo):
 
     return has_tests, has_ci
 
-def analyze_tdd_and_ci_languages(repo_list):
+def analyze_tdd_and_ci_languages(repositories):
 
-    repositories = repo_list
 
-    print(f"Fetched {len(repositories)} repositories")
+    print(f"\n\nFetched {len(repositories)} repositories")
     
     tdd_languages = []
     tdd_ci_languages = []
 
+    i = 0
+    
+    total_repos = len(repositories)
+
     for repo in repositories:
+
+        repo_left = total_repos - i 
+        i = i + 1
+
+        print(f"Have a total of {repo_left} repositories left.")
         language = repo.get("language")
         if (language == None):
             None
@@ -87,8 +95,6 @@ def analyze_tdd_and_ci_languages(repo_list):
                 tdd_languages.append(language)
             if has_tests and has_ci:
                 tdd_ci_languages.append(language)
-
-        
 
     tdd_languages = Counter(tdd_languages).most_common(10)
     print("TDD",tdd_languages)
