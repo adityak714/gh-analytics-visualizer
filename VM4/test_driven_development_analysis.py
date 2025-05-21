@@ -5,7 +5,6 @@ from collections import Counter
 import json
 import re
 from datetime import datetime, timedelta, date
-from Github_API_fetch import fetch_repo
 
 # GitHub API token setup
 token = os.getenv("GITHUB_TOKEN")
@@ -68,9 +67,9 @@ def check_test_and_ci_files(repo):
 
     return has_tests, has_ci
 
-def analyze_tdd_and_ci_languages():
+def analyze_tdd_and_ci_languages(repo_list):
 
-    repositories = fetch_repo()
+    repositories = repo_list
 
     print(f"Fetched {len(repositories)} repositories")
     
@@ -79,22 +78,21 @@ def analyze_tdd_and_ci_languages():
 
     for repo in repositories:
         language = repo.get("language")
-        if not language:    
-            continue
+        if (language == None):
+            None
+        else:
+            has_tests, has_ci = check_test_and_ci_files(repo)
 
-        has_tests, has_ci = check_test_and_ci_files(repo)
-
-        if has_tests:
-            tdd_languages.append(language)
-        if has_tests and has_ci:
-            tdd_ci_languages.append(language)
+            if has_tests:
+                tdd_languages.append(language)
+            if has_tests and has_ci:
+                tdd_ci_languages.append(language)
 
         
 
     tdd_languages = Counter(tdd_languages).most_common(10)
-    print(tdd_languages)
+    print("TDD",tdd_languages)
 
     tdd_ci_languages = Counter(tdd_ci_languages).most_common(10)
-    print(tdd_ci_languages)
+    print("TDD and CI",tdd_ci_languages)
 
-analyze_tdd_and_ci_languages()
