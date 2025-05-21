@@ -3,10 +3,10 @@ import requests
 from datetime import datetime, timedelta
 from collections import Counter
 import time
-import ray
 
-# Connect to the Ray cluster (auto-discover head node)
-ray.init(address="auto")
+import ray
+# replace 192.168.2.32 with the value from `hostname -I`
+ray.init(address="192.168.2.32:6379", _node_ip_address="192.168.2.32")
 
 # GitHub token from environment variable
 token = os.getenv("GITHUB_TOKEN")
@@ -60,6 +60,9 @@ def fetch_day(day):
             print(f"❌ Exception during fetch for {created_range}: {e}")
             time.sleep(5)  # back off and retry
 
+# Start timing here
+script_start = time.time()
+
 # Dispatch tasks to Ray
 futures = [fetch_day.remote(day) for day in date_ranges]
 results = ray.get(futures)
@@ -76,3 +79,7 @@ def num_of_languages(items):
 print("\n📊 Top 10 languages:")
 for lang, count in num_of_languages(all_repos).most_common(10):
     print(f"{lang}: {count}")
+
+# End timing here
+elapsed = time.time() - script_start
+print(f"\n⏱️ Total execution time: {elapsed:.2f} seconds")

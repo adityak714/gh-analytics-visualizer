@@ -16,11 +16,11 @@ def fetch_repo(date):
     repos_list = []
 
     # Maximum of 100 per page can be loaded, so we iterate over 10 pages where each page gives us 100 repositories
-    for i in range(1,2):
+    for i in range(1,11):
         
         # url for Github API for repositories created during specified date
         # Not archieved and with a maximum of 100 results
-        url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=10&page={i}"
+        url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=100&page={i}"
 
         # Make a Get request to the Github API
         repos = requests.get(url,headers=headers)
