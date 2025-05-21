@@ -3,7 +3,7 @@ import json
 from test_driven_development_analysis import analyze_tdd_and_ci_languages
 
 # Connect to Pulsar broker on VM4
-client = pulsar.Client('pulsar://130.238.29.220:6650')
+client = pulsar.Client("pulsar://192.168.2.29:6650")
 
 # Subscribe to the same topic the producer writes to
 consumer = client.subscribe(
@@ -12,28 +12,35 @@ consumer = client.subscribe(
     consumer_type=pulsar.ConsumerType.Shared  # Allows multiple consumers to share load
 )
 
-print("Listening for messages on topic: repos-raw")
+print("\n\nListening for messages on topic: repos-raw\n\n")
+
+list_of_repos=[]
 
 
 try:
     while True:
-        # Wait for a message
-        msg = consumer.receive()
-        print(type(msg))
-        # 
         try:
-            # Decode JSON message
+            msg = consumer.receive(timeout_millis=1000)
             repo = json.loads(msg.data())
-            # Acknowledge successful processing
+            list_of_repos.extend(repo)
             consumer.acknowledge(msg)
+            print(f"Current amount of repos: {len(list_of_repos)}\n")
+        except pulsar.Timeout:
+            continue  # No message received in time, loop again
         except Exception as e:
             print("Failed to process message:", e)
-            consumer.negative_acknowledge(msg)    
+            # Only negatively acknowledge if msg was defined
+            if 'msg' in locals():
+                consumer.negative_acknowledge(msg)
+
 except KeyboardInterrupt:
     print("\nStopping consumer.")
+    try:
+        analyze_tdd_and_ci_languages(list_of_repos)
+    except Exception as e:
+        print("Failed during analysis:", e)
 
-# Clean up
-consumer.close()
-client.close()
-
+finally:
+    consumer.close()
+    client.close()
 
