@@ -1,6 +1,6 @@
-import os
 import requests
 from datetime import date
+import time
 from datetime import datetime, timedelta
 import logging
 logging.getLogger("ray").setLevel(logging.WARNING)
@@ -15,25 +15,29 @@ def fetch_repo(date, token):
 
     headers = {"Authorization": f"token {token}"}
 
-    print("Current date: "+date)
     # Initialize a list to store repositories
     repos_list = []
-
+    print(date)
     # Maximum of 100 per page can be loaded, so we iterate over 10 pages where each page gives us 100 repositories
     for i in range(1,11):
-        
+
         # url for Github API for repositories created during specified date
         # Not archieved and with a maximum of 100 results
         url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=100&page={i}"
 
         # Make a Get request to the Github API
         repos = requests.get(url,headers=headers)
+        if repos.status_code == 403:
+                print("Sleeping...")
+                time.sleep(60)
+                continue
 
         # Check if response is OK
         if repos.status_code != 200:
             print(f"Error: Received status code {repos.status_code} for URL: {url}")
             break
 
+      
         try:
             repos = repos.json()
         except requests.exceptions.JSONDecodeError:
