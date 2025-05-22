@@ -5,6 +5,8 @@ import ray
 from Github_API_fetch import fetch_repo
 from producer import send_to_pulsar
 import os
+import pulsar
+
 
 
 # Initialize Ray
@@ -42,9 +44,9 @@ def main():
     
     for i, chunk in enumerate(chunks):
         print(f"Sent {len(chunk)} repos")
-        send_to_pulsar(chunk)
+        send_to_pulsar(chunk, False)
 
-
+    
     print(f"Sent a total of {len(list_of_repos)} repos")
 
 if __name__ == "__main__":
