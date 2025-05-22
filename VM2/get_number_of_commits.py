@@ -4,6 +4,7 @@ import requests
 from collections import Counter
 import re
 import numpy as np
+import time
 
 # Needs to use personal token to access github API
 # Make one with Environment Variables
@@ -12,7 +13,10 @@ def commitCount(u, r):
     ## INSPIRATION: https://gist.github.com/codsane/25f0fd100b565b3fce03d4bbd7e7bf33
     url = f"https://api.github.com/repos/{u}/{r}/commits?per_page=1"
     response = requests.get(url, headers=headers)
-
+    if response.status_code == 403:
+            print("Sleeping...")
+            time.sleep(60)
+        
     if response.status_code != 200:
         print(f"Failed to fetch commits for {u}/{r} — Status code: {response.status_code}")
         return None
