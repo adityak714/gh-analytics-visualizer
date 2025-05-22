@@ -6,8 +6,7 @@ from Github_API_fetch import fetch_repo
 from producer import send_to_pulsar
 import os
 import pulsar
-
-
+import time
 
 # Initialize Ray
 ray.init(
@@ -29,6 +28,9 @@ def fetch_and_return(date, token):
         return []
 
 def main():    
+
+    t0 = time.time()
+
     token = os.getenv("GITHUB_TOKEN")
     # Parallell hämtning med Ray
     futures = [fetch_and_return.remote(date_str, token) for date_str in dates]
@@ -48,7 +50,13 @@ def main():
 
     send_to_pulsar([], True)
     
+
     print(f"Sent a total of {len(list_of_repos)} repos")
 
+    t1 = time.time()
+
+    total = t1-t0
+    
+    print(f"Total time it took: {total}s")
 if __name__ == "__main__":
     main() 
