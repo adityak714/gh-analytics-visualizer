@@ -1,6 +1,7 @@
 import pulsar
 import json
 from get_number_of_commits import count_commits
+import time
 
 # Connect to Pulsar broker on VM4
 client = pulsar.Client("pulsar://192.168.2.29:6650")
@@ -11,6 +12,8 @@ consumer = client.subscribe(
     subscription_name='repo-subscription-for-commits', 
     consumer_type=pulsar.ConsumerType.Exclusive  # Allows multiple consumers to share load
 )
+
+t0 = time.time()
 
 print("\n\nListening for messages on topic: repos-raw\n\n")
 
@@ -26,6 +29,9 @@ try:
                 consumer.acknowledge(msg)
                 try:
                     count_commits(list_of_repos)
+                    t1 = time.time()
+                    total = t1-t0
+                    print(f"Total time it took: {total}s")
                 except Exception as e:
                     print("Failed during analysis:", e)
                 break  
