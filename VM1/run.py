@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, date
-from producent_VM3 import send_to_pulsar
+from producer import send_to_pulsar
 from Github_API_fetch import fetch_repo
 
 # Set dates where we want to fetch repositories
@@ -21,5 +21,7 @@ chunks = [list_of_repos[i:i + 100] for i in range(0, len(list_of_repos), 100)]
 for repos in chunks:
     print(f"Sent{len(repos)} repos")
     send_to_pulsar(repos)
+
+
 print(f"Sent a total of {len(list_of_repos)} repos")
 # Send the list of repositories to pulsar using send_to_pulsar()
