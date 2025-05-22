@@ -13,7 +13,6 @@ consumer = client.subscribe(
     consumer_type=pulsar.ConsumerType.Exclusive  # Allows multiple consumers to share load
 )
 
-t0 = time.time()
 
 print("\n\nListening for messages on topic: repos-raw\n\n")
 
@@ -28,6 +27,7 @@ try:
                 print("Received shutdown signal. Exiting.")
                 consumer.acknowledge(msg)
                 try:
+                    t0 = time.time()
                     count_commits(list_of_repos)
                     t1 = time.time()
                     total = t1-t0
