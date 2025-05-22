@@ -5,6 +5,7 @@ from collections import Counter
 import json
 import re
 from datetime import datetime, timedelta, date
+import time
 
 # GitHub API token setup
 token = os.getenv("GITHUB_TOKEN")
@@ -23,6 +24,11 @@ def check_test_and_ci_files(repo):
     contents_url = f"https://api.github.com/repos/{owner}/{repo_name}/git/trees/main?recursive=1"
 
     response = requests.get(contents_url, headers=headers)
+
+    if response.status_code == 403:
+        print("Sleeping...")
+        time.sleep(60)
+        
 
     if response.status_code != 200:
 
