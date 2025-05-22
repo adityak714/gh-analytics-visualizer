@@ -1,6 +1,9 @@
 import pulsar
 import json
 from test_driven_development_analysis import analyze_tdd_and_ci_languages
+import time
+
+t0 = time.time()
 
 # Connect to Pulsar broker on VM4
 client = pulsar.Client("pulsar://192.168.2.29:6650")
@@ -26,6 +29,9 @@ try:
                 consumer.acknowledge(msg)
                 try:
                     analyze_tdd_and_ci_languages(list_of_repos)
+                    t1 = time.time()
+                    total = t1-t0
+                    print(f"Total time it took: {total}s")
                 except Exception as e:
                     print("Failed during analysis:", e)
                 break  
