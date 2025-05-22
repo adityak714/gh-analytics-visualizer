@@ -4,7 +4,6 @@ import requests
 from collections import Counter
 import re
 import numpy as np
-from Github_API_fetch import fetch_repo
 
 # Needs to use personal token to access github API
 # Make one with Environment Variables
