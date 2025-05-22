@@ -12,7 +12,7 @@ ray.init(
     address="auto"
 )
 # Set date range for fetching repositories
-start_date = datetime.strptime("2025-05-10", "%Y-%m-%d")
+start_date = datetime.strptime("2025-05-20", "%Y-%m-%d")
 todays_date = datetime.strptime(date.today().strftime("%Y-%m-%d"), "%Y-%m-%d")
 dates = [(start_date + timedelta(days=i)).strftime("%Y-%m-%d") for i in range((todays_date - start_date).days + 1)]
 
