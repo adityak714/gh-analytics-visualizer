@@ -19,7 +19,7 @@ chunks = [list_of_repos[i:i + 100] for i in range(0, len(list_of_repos), 100)]
 
 
 for repos in chunks:
-    print(f"Sent{len(repos)} repos")
+    print(f"Sent {len(repos)} repos")
     send_to_pulsar(repos)
 
 

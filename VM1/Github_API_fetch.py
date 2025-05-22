@@ -2,14 +2,19 @@ import os
 import requests
 from datetime import date
 from datetime import datetime, timedelta
+import logging
+logging.getLogger("ray").setLevel(logging.WARNING)
+
 
 # Needs to use personal token to access github API
 # Make one with Environment Variables
-token = os.getenv("GITHUB_TOKEN")
-headers = {"Authorization": f"token {token}"}
+
 
 # Fetches and returns a list of repositories 
-def fetch_repo(date):
+def fetch_repo(date, token):
+
+    headers = {"Authorization": f"token {token}"}
+
     print("Current date: "+date)
     # Initialize a list to store repositories
     repos_list = []
@@ -19,7 +24,7 @@ def fetch_repo(date):
         
         # url for Github API for repositories created during specified date
         # Not archieved and with a maximum of 100 results
-        url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=10&page={i}"
+        url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=100&page={i}"
 
         # Make a Get request to the Github API
         repos = requests.get(url,headers=headers)
