@@ -19,7 +19,7 @@ def fetch_repo(date):
         
         # url for Github API for repositories created during specified date
         # Not archieved and with a maximum of 100 results
-        url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=100&page={i}"
+        url=f"https://api.github.com/search/repositories?q=created:{date}+archived:false&per_page=10&page={i}"
 
         # Make a Get request to the Github API
         repos = requests.get(url,headers=headers)

@@ -1,0 +1,46 @@
+import pulsar
+import json
+from get_number_of_commits import count_commits
+
+# Connect to Pulsar broker on VM4
+client = pulsar.Client("pulsar://192.168.2.29:6650")
+
+# Subscribe to the same topic the producer writes to
+consumer = client.subscribe(
+    'persistent://public/default/repos-raw',
+    subscription_name='repo-subscription',  # Unique subscription name
+    consumer_type=pulsar.ConsumerType.Shared  # Allows multiple consumers to share load
+)
+
+print("\n\nListening for messages on topic: repos-raw\n\n")
+
+list_of_repos=[]
+
+
+try:
+    while True:
+        try:
+            msg = consumer.receive(timeout_millis=1000)
+            repo = json.loads(msg.data())
+            list_of_repos.extend(repo)
+            consumer.acknowledge(msg)
+            print(f"Current amount of repos: {len(list_of_repos)}\n")
+        except pulsar.Timeout:
+            continue  # No message received in time, loop again
+        except Exception as e:
+            print("Failed to process message:", e)
+            # Only negatively acknowledge if msg was defined
+            if 'msg' in locals():
+                consumer.negative_acknowledge(msg)
+
+except KeyboardInterrupt:
+    print("\nStopping consumer.")
+    try:
+        count_commits(list_of_repos)
+    except Exception as e:
+        print("Failed during analysis:", e)
+
+finally:
+    consumer.close()
+    client.close()
+
