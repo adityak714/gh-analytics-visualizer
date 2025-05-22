@@ -3,7 +3,6 @@ import json
 from test_driven_development_analysis import analyze_tdd_and_ci_languages
 import time
 
-t0 = time.time()
 
 # Connect to Pulsar broker on VM4
 client = pulsar.Client("pulsar://192.168.2.29:6650")
@@ -28,6 +27,7 @@ try:
                 print("Received shutdown signal. Exiting.")
                 consumer.acknowledge(msg)
                 try:
+                    t0 = time.time()
                     analyze_tdd_and_ci_languages(list_of_repos)
                     t1 = time.time()
                     total = t1-t0
