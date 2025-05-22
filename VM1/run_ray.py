@@ -46,6 +46,7 @@ def main():
         print(f"Sent {len(chunk)} repos")
         send_to_pulsar(chunk, False)
 
+    send_to_pulsar([], True)
     
     print(f"Sent a total of {len(list_of_repos)} repos")
 
