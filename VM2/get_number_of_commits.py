@@ -39,13 +39,25 @@ headers = {"Authorization": f"token {token}"}
 def count_commits(repos):
     # Parse the json response from the Github API
     n_commits_list = []
+    n_repos = len(repos)
+
+
     #IDEA: Extract owner dictionary to get their ID/name, also extract the repo name, then use the function below to calculate the number of commits, and alter it to also return repo name.
-    for i in range(len(repos)):
+    for i in range(n_repos):
+        
+        print("Number of repos left: ", n_repos - i)
+
         username = repos[i]["owner"]["login"]
         reponame = repos[i]["name"]
         n_commits = commitCount(username, reponame)
-        print(f"Repository: {reponame} -- Username: {username} -- n-commits: {n_commits}")
-        n_commits_list.append((reponame, n_commits))
+        
+
+    
+        if n_commits is not None:
+            print(f"Repository: {reponame} -- Username: {username} -- n-commits: {n_commits}")
+            n_commits_list.append((reponame, n_commits))
+        else:
+            print(f"⚠️ Skipping {reponame} due to missing commit count")
 
     # Sort by commit count (index 1), descending
     n_commits_list_sorted = sorted(n_commits_list, key=lambda x: x[1], reverse=True)
