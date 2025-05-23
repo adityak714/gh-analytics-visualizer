@@ -5,7 +5,7 @@ import ray
 from Github_API_fetch import fetch_repo
 from producer import send_to_pulsar
 import os
-import pulsar
+from Q1 import num_of_languages
 import time
 
 # Initialize Ray
@@ -13,7 +13,7 @@ ray.init(
     address="auto"
 )
 # Set date range for fetching repositories
-start_date = datetime.strptime("2025-05-20", "%Y-%m-%d")
+start_date = datetime.strptime("2025-05-19", "%Y-%m-%d")
 todays_date = datetime.strptime(date.today().strftime("%Y-%m-%d"), "%Y-%m-%d")
 dates = [(start_date + timedelta(days=i)).strftime("%Y-%m-%d") for i in range((todays_date - start_date).days + 1)]
 
@@ -52,6 +52,8 @@ def main():
     
 
     print(f"Sent a total of {len(list_of_repos)} repos")
+
+    print(num_of_languages(list_of_repos).most_common(10))
 
     t1 = time.time()
 

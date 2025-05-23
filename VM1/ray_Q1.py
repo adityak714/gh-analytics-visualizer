@@ -24,7 +24,7 @@ page = 1        # only 1 page per day
 # Date range: past year, every 2nd day
 end_date = datetime.utcnow().date()
 start_date = end_date - timedelta(days=365)
-date_ranges = [start_date + timedelta(days=i) for i in range(0, 365, 2)]  # every 2nd day
+date_ranges = [start_date + timedelta(days=i) for i in range(0, 365, 1)]  
 
 @ray.remote
 def fetch_day(day):
