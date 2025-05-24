@@ -16,7 +16,6 @@ def check_test_and_ci_files(repo, token):
     # Extract the owner and repository name from the repo
     owner = repo["owner"]["login"]
     repo_name = repo["name"]
-    print("1")
     # Construct the URL to fetch the repository's file tree (main branch)
     contents_url = f"https://api.github.com/repos/{owner}/{repo_name}/git/trees/main?recursive=1"
 
