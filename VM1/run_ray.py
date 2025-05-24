@@ -5,7 +5,7 @@ import ray
 from Github_API_fetch import fetch_repo
 from producer import send_to_pulsar
 import os
-from Q1 import num_of_languages
+from count_languages import num_of_languages
 import time
 
 # Initialize Ray

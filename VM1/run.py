@@ -3,7 +3,8 @@ from producer import send_to_pulsar
 from Github_API_fetch import fetch_repo
 import os
 import time
-from Q1 import num_of_languages
+from count_languages import num_of_languages
+
 t0 = time.time()
 
 token = os.getenv("GITHUB_TOKEN")
