@@ -4,7 +4,7 @@ from get_number_of_commits import count_commits
 import time
 import os
 
-token = "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"
+token = os.getenv("GITHUB_TOKEN")
 
 # Connect to Pulsar broker on VM4
 client = pulsar.Client("pulsar://192.168.2.29:6650")

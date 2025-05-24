@@ -4,7 +4,7 @@ from test_driven_development_analysis import analyze_tdd_and_ci_languages
 import time
 import os
 
-token = "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"
+token = os.getenv("GITHUB_TOKEN")
 
 # Connect to Pulsar broker on VM4
 client = pulsar.Client("pulsar://192.168.2.29:6650")
