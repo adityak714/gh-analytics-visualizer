@@ -9,13 +9,17 @@ import time
 # Needs to use personal token to access github API
 # Make one with Environment Variables
 
-def commitCount(u, r):
+def commitCount(u, r, token):
+    
+    headers = {"Authorization": f"token {token}"}
+    print("1")
     ## INSPIRATION: https://gist.github.com/codsane/25f0fd100b565b3fce03d4bbd7e7bf33
     url = f"https://api.github.com/repos/{u}/{r}/commits?per_page=1"
     response = requests.get(url, headers=headers)
     if response.status_code == 403:
             print("Sleeping...")
-            time.sleep(60)
+            print(response.text)  # eller response.json()
+            time.sleep(3605)
         
     if response.status_code != 200:
         print(f"Failed to fetch commits for {u}/{r} — Status code: {response.status_code}")
@@ -29,8 +33,6 @@ def commitCount(u, r):
         # Only 0 or 1 commit (not paginated), count manually
         return len(response.json())
 
-token = os.getenv("GITHUB_TOKEN")
-headers = {"Authorization": f"token {token}"}
 
 # url for Github API for repositories created after 2025-05-14
 # Not archieved and with a maximum of 100 results
@@ -40,11 +42,11 @@ headers = {"Authorization": f"token {token}"}
 # repos = requests.get(url,headers=headers)
 
 
-def count_commits(repos):
+def count_commits(repos, token):
+    
     # Parse the json response from the Github API
     n_commits_list = []
     n_repos = len(repos)
-
 
     #IDEA: Extract owner dictionary to get their ID/name, also extract the repo name, then use the function below to calculate the number of commits, and alter it to also return repo name.
     for i in range(n_repos):
@@ -53,7 +55,7 @@ def count_commits(repos):
 
         username = repos[i]["owner"]["login"]
         reponame = repos[i]["name"]
-        n_commits = commitCount(username, reponame)
+        n_commits = commitCount(username, reponame, token)
         
 
     

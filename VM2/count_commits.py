@@ -2,6 +2,9 @@ import pulsar
 import json
 from get_number_of_commits import count_commits
 import time
+import os
+
+token = "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"
 
 # Connect to Pulsar broker on VM4
 client = pulsar.Client("pulsar://192.168.2.29:6650")
@@ -28,7 +31,7 @@ try:
                 consumer.acknowledge(msg)
                 try:
                     t0 = time.time()
-                    count_commits(list_of_repos)
+                    count_commits(list_of_repos, token)
                     t1 = time.time()
                     total = t1-t0
                     print(f"Total time it took: {total}s")
