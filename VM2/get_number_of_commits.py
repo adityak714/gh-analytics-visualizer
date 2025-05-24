@@ -12,7 +12,6 @@ import time
 def commitCount(u, r, token):
     
     headers = {"Authorization": f"token {token}"}
-    print("1")
     ## INSPIRATION: https://gist.github.com/codsane/25f0fd100b565b3fce03d4bbd7e7bf33
     url = f"https://api.github.com/repos/{u}/{r}/commits?per_page=1"
     response = requests.get(url, headers=headers)
