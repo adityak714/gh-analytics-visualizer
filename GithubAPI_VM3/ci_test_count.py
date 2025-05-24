@@ -2,7 +2,9 @@ import pulsar
 import json
 from test_driven_development_analysis import analyze_tdd_and_ci_languages
 import time
+import os
 
+token = "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"
 
 # Connect to Pulsar broker on VM4
 client = pulsar.Client("pulsar://192.168.2.29:6650")
@@ -28,7 +30,7 @@ try:
                 consumer.acknowledge(msg)
                 try:
                     t0 = time.time()
-                    analyze_tdd_and_ci_languages(list_of_repos)
+                    analyze_tdd_and_ci_languages(list_of_repos, token)
                     t1 = time.time()
                     total = t1-t0
                     print(f"Total time it took: {total}s")

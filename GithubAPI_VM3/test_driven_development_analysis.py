@@ -7,19 +7,16 @@ import re
 from datetime import datetime, timedelta, date
 import time
 
-# GitHub API token setup
-token = os.getenv("GITHUB_TOKEN")
-headers = {"Authorization": f"token {token}"}
-
 
 # Function to check for most popular languages in projects with unit tests
 # and for projects who uses continuous integration in the development
-def check_test_and_ci_files(repo):
+def check_test_and_ci_files(repo, token):
     
+    headers = {"Authorization": f"token {token}"}
     # Extract the owner and repository name from the repo
     owner = repo["owner"]["login"]
     repo_name = repo["name"]
-
+    print("1")
     # Construct the URL to fetch the repository's file tree (main branch)
     contents_url = f"https://api.github.com/repos/{owner}/{repo_name}/git/trees/main?recursive=1"
 
@@ -27,7 +24,9 @@ def check_test_and_ci_files(repo):
 
     if response.status_code == 403:
         print("Sleeping...")
-        time.sleep(60)
+        print(response.text)  # eller response.json()
+        time.sleep(3605)
+        
         
 
     if response.status_code != 200:
@@ -73,7 +72,7 @@ def check_test_and_ci_files(repo):
 
     return has_tests, has_ci
 
-def analyze_tdd_and_ci_languages(repositories):
+def analyze_tdd_and_ci_languages(repositories, token):
 
 
     print(f"\n\nFetched {len(repositories)} repositories")
@@ -91,11 +90,12 @@ def analyze_tdd_and_ci_languages(repositories):
         i = i + 1
 
         print(f"Have a total of {repo_left} repositories left.")
+
         language = repo.get("language")
         if (language == None):
             None
         else:
-            has_tests, has_ci = check_test_and_ci_files(repo)
+            has_tests, has_ci = check_test_and_ci_files(repo, token)
 
             if has_tests:
                 tdd_languages.append(language)
