@@ -1,0 +1,127 @@
+- hosts: all
+  tasks:
+   - name: Generate hosts file
+     lineinfile: dest=/etc/hosts
+                 regexp='.*{{ item }}$'
+                 line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}}"
+                 state=present            
+     when: hostvars[item].ansible_default_ipv4.address is defined
+     with_items: "{{groups['all']}}"
+     become: true
+
+   - name: apt update
+     apt: update_cache=yes upgrade=dist
+     become: true
+
+   - name: Extra packages
+     apt: pkg=python3.10-venv state=latest update_cache=true  
+     become: true
+
+   - name: Download git repository
+     become: true
+     git:
+      repo: 'https://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@github.com/adityak714/de-ii-project'
+      dest: /project-2
+      single_branch: yes
+      version: dockerize
+
+   - name: Extra packages
+     apt: pkg={{item}} state=latest update_cache=true 
+     with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+     become: true  
+   
+   - name: apt update
+     apt: update_cache=yes upgrade=dist
+     become: true
+   
+   - name: Add Docker repository key
+     apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+     become: true
+   
+   - name: Add Docker repository 
+     command: add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+     become: true
+   
+   - name: apt update
+     apt: update_cache=yes upgrade=dist
+     become: true
+     
+     # Workaround pip issue with MTU mismatch, see: https://github.com/docker/docker.github.io/pull/9249/files
+     # MTU for SNIC is 1450, Docker default is 1500. Override so that Docker matches the host.
+     # We create the config file before installing, to avoid any need to restart the docker daemon.
+   
+   - name: Create Ansible docker config directory.
+     become: true
+     file:
+       path: "/etc/docker"
+       state: directory
+   - name: Create Ansible docker file to configure Docker MTU to match SNIC for pip issue
+     become: true
+     copy:
+       dest: "/etc/docker/daemon.json"
+       content: |
+        {
+          "mtu": 1450
+        }
+
+   - name: Install Docker  
+     apt: pkg=docker-ce state=present update_cache=true allow_unauthenticated=yes
+     become: true
+
+   - name: Ensure group of docker is present
+     ansible.builtin.group:
+      name: docker
+      state: present
+
+   - name: Adding user ubuntu to docker group
+     become: true
+     user:
+      name: ubuntu
+      groups: docker
+      append: yes
+  
+    # Start Python env -> install packages
+   - name: Pip install Ray, Pulsar Client, others
+     become: true
+     pip: 
+      requirements: /project-2/requirements.txt
+      virtualenv: /home/ubuntu/venv
+      virtualenv_command: /usr/bin/python3 -m venv
+
+   - name: Start docker
+     become: true
+     shell: |
+      sleep 3
+      sudo systemctl start docker
+
+# Finer Instructions for VMs running ray
+- hosts: ray-master-vm1
+  tasks:   
+  - name: Start Ray cluster
+    shell: |
+     source ~/venv/bin/activate
+     ray start --head --node-ip-address=192.168.2.192 --port=6379
+    # become: true
+
+- hosts: ray-worker-vm2,ray-worker-vm3,ray-worker-vm5
+  tasks:   
+  - name: Start Ray cluster
+    shell: |
+      source ~/venv/bin/activate
+      ray start --address='192.168.2.32:6379'
+    # become: true
+
+
+# Finer instructions for VMs running pulsar
+- hosts: pulsar-master-vm4
+  tasks:
+   - name: Start pulsar
+     shell: |
+      apache-pulsar-2.9.4/bin/pulsar standalone
+     # become: true
