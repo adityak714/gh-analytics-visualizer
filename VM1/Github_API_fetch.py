@@ -8,7 +8,6 @@ logging.getLogger("ray").setLevel(logging.WARNING)
 
 # Needs to use personal token to access github API
 # Make one with Environment Variables
-arr = ["token_1", ...]
 
 # Fetches and returns a list of repositories 
 def fetch_repo(date, token):
