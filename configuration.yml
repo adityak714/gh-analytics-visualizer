@@ -21,7 +21,7 @@
      become: true
      git:
       repo: 'https://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@github.com/adityak714/de-ii-project'
-      dest: /project-2
+      dest: /project
       single_branch: yes
       version: dockerize
 
@@ -90,7 +90,7 @@
    - name: Pip install Ray, Pulsar Client, others
      become: true
      pip: 
-      requirements: /project-2/requirements.txt
+      requirements: /project/requirements.txt
       virtualenv: /home/ubuntu/venv
       virtualenv_command: /usr/bin/python3 -m venv
 
@@ -101,27 +101,56 @@
       sudo systemctl start docker
 
 # Finer Instructions for VMs running ray
-- hosts: ray-master-vm1
-  tasks:   
-  - name: Start Ray cluster
-    shell: |
-     source ~/venv/bin/activate
-     ray start --head --node-ip-address=192.168.2.192 --port=6379
-    # become: true
+#- hosts: ray-master-vm1
+#  tasks:   
+#  - name: Start Ray cluster
+#    shell: |
+#     source ~/venv/bin/activate
+#     ray start --head --node-ip-address=192.168.2.192 --port=6379
+#    # become: true
 
 - hosts: ray-worker-vm2,ray-worker-vm3,ray-worker-vm5
   tasks:   
   - name: Start Ray cluster
     shell: |
-      source ~/venv/bin/activate
-      ray start --address='192.168.2.32:6379'
+      export PATH=/home/ubuntu/venv/bin:$PATH
+      ray start --address="192.168.2.192:6379"
+    vars:
+     ansible_python_interpreter: /home/ubuntu/venv/bin/python  
     # become: true
-
 
 # Finer instructions for VMs running pulsar
 - hosts: pulsar-master-vm4
   tasks:
-   - name: Start pulsar
-     shell: |
-      apache-pulsar-2.9.4/bin/pulsar standalone
-     # become: true
+
+   - name: Create Pulsar standalone as a daemon
+     become: true
+     copy:
+      dest: /etc/systemd/system/pulsar-standalone.service
+      content: |
+       [Unit]
+       Description=Apache Pulsar Standalone
+       After=network.target
+
+       [Service]
+       Type=simple
+       User=pulsar
+       ExecStart=/opt/pulsar/bin/pulsar standalone
+       Restart=on-failure
+       WorkingDirectory=/opt/pulsar
+       StandardOutput=journal
+       StandardError=journal
+
+       [Install]
+       WantedBy=multi-user.target
+
+   - name: Reload systemd
+     become: true
+     systemd:
+      daemon_reload: yes
+
+   - name: Start Pulsar standalone
+     systemd:
+      name: pulsar-standalone
+      enabled: yes
+      state: started
