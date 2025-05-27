@@ -1,7 +1,5 @@
 import requests
-from datetime import date
 import time
-from datetime import datetime, timedelta
 import logging
 logging.getLogger("ray").setLevel(logging.WARNING)
 
@@ -27,17 +25,23 @@ def fetch_repo(date, token):
 
         # Make a Get request to the Github API
         repos = requests.get(url,headers=headers)
-        if repos.status_code == 403:
-                print("Sleeping...")
-                time.sleep(60)
-                continue
 
-        # Check if response is OK
+        # If maximum request limit has been reached, sleep for 60 seconds
+        if repos.status_code == 403:
+            print("Sleeping...")
+            time.sleep(60)
+            continue
+
+        # If not autheried, break loop
+        if repos.status_code == 401:
+            print("Unautherized")
+            break
+        
+         # Check if response is OK
         if repos.status_code != 200:
             print(f"Error: Received status code {repos.status_code} for URL: {url}")
             break
-
-      
+        
         try:
             repos = repos.json()
         except requests.exceptions.JSONDecodeError:

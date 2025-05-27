@@ -1,9 +1,5 @@
-from datetime import datetime
-import os
 import requests
-from collections import Counter
 import re
-import numpy as np
 import time
 
 # Needs to use personal token to access github API
