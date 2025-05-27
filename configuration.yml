@@ -134,12 +134,11 @@
 
        [Service]
        Type=simple
-       User=pulsar
-       ExecStart=/opt/pulsar/bin/pulsar standalone
+       User=ubuntu
+       ExecStart=/home/ubuntu/apache-pulsar-2.9.4/bin/pulsar standalone
        Restart=on-failure
-       WorkingDirectory=/opt/pulsar
-       StandardOutput=journal
-       StandardError=journal
+       RestartSec=10
+       WorkingDirectory=/home/ubuntu/apache-pulsar-2.9.4/
 
        [Install]
        WantedBy=multi-user.target
@@ -150,6 +149,7 @@
       daemon_reload: yes
 
    - name: Start Pulsar standalone
+     become: true
      systemd:
       name: pulsar-standalone
       enabled: yes
