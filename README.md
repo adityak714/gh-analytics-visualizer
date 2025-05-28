@@ -75,6 +75,7 @@ These are listed in the `requirements.txt` file.
      ```sh
      ansible-playbook teardown.yml --private-key=...
      ```
+   For other purposes like running the configuration playbook for the first time, or the rescale patch playbook (for re-scaling services), replace the `teardown.yml` with the other playbook. Note that giving the private key that is common across all VMs is important in the `--private-key` flag.
 
 ## Results
 
