@@ -35,6 +35,7 @@ The workspace is organized into three virtual machines (VMs), each with specific
 - `docker-compose.yaml`: Defines the services and their dependencies for the project.
 - `dockerize.yml`: Sets up Docker Swarm and labels worker nodes.
 - `configuration.yml`: Configures the environment, installs dependencies, and sets up Docker and Pulsar.
+- `patch-rescale.yml`: A quick playbook for executing instructions upon requirement to scale services quickly, running in the Swarm. This can be modified and executed quickly depending on which service to scale, and where to scale up/down by X replicas.
 - `teardown.yml`: Cleans up the project environment.
 
 ## Requirements
