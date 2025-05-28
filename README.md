@@ -58,19 +58,19 @@ These are listed in the `requirements.txt` file.
    - Set the `GITHUB_TOKEN` environment variable with a valid GitHub token.
 
 2. **Build and Deploy**:
-   - Use the `docker-compose.yaml` file to build and deploy the services:
+   - Use the `docker-compose.yaml` file to build and deploy the services (however, Ansible does this):
      ```sh
      docker stack deploy -c docker-compose.yaml de-ii
      ```
 
 3. **Fetch and Process Data**:
    - VM1 fetches repositories and sends them to Pulsar.
-   - VM2 and VM3 consume the data and perform analyses.
+   - VM1, VM2 and VM3 consume the data and perform analyses.
 
 4. **Teardown**:
    - Use the `teardown.yml` file to clean up the environment as preparation:
      ```sh
-     ansible-playbook teardown.yml
+     ansible-playbook teardown.yml --private-key=...
      ```
 
 ## Results
