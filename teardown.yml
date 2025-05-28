@@ -3,5 +3,5 @@
   - name: Delete project repo
     become: true
     shell: |
-     sudo rm -rf /project
+     sudo rm -rf ~/project
      docker swarm leave # --force  
