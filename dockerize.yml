@@ -1,0 +1,26 @@
+
+- hosts: ray-master-vm1
+  tasks:
+  - name: docker swarm init
+     # sudo rm -rf /project*
+     # export PATH=/home/ubuntu/venv/bin:$PATH
+     # ray stop
+    command: docker swarm init --advertise-addr 192.168.2.192
+
+  - name: get docker swarm token
+    shell: docker swarm join-token -q worker 
+    register: token
+
+  - name: store swarm token    
+    set_fact:
+     swarm_token={{ token.stdout }}
+  
+  - name: debugging
+    debug:
+     var: swarm_token
+
+- hosts: ray-worker-vm2,ray-worker-vm3,ray-worker-vm5,pulsar-master-vm4
+  tasks:
+  - name: docker swarm join
+    command: docker swarm join --token {{hostvars['ray-master-vm1']['swarm_token']}} 192.168.2.192:2377
+    register: workers_reg

@@ -101,20 +101,22 @@
       sudo systemctl start docker
 
 # Finer Instructions for VMs running ray
-#- hosts: ray-master-vm1
-#  tasks:   
-#  - name: Start Ray cluster
-#    shell: |
-#     source ~/venv/bin/activate
-#     ray start --head --node-ip-address=192.168.2.192 --port=6379
-#    # become: true
-
-- hosts: ray-worker-vm2,ray-worker-vm3,ray-worker-vm5
+- hosts: ray-master-vm1
   tasks:   
   - name: Start Ray cluster
     shell: |
-      export PATH=/home/ubuntu/venv/bin:$PATH
-      ray start --address="192.168.2.192:6379"
+     export PATH=/home/ubuntu/venv/bin:$PATH
+     ray start --head --node-ip-address=192.168.2.192 --port=6379
+    vars:
+     ansible_python_interpreter: /home/ubuntu/venv/bin/python  
+    # become: true
+
+- hosts: ray-worker-vm2,ray-worker-vm3,ray-worker-vm5
+  tasks:   
+  - name: Connect nodes in Ray cluster
+    shell: |
+     export PATH=/home/ubuntu/venv/bin:$PATH
+     ray start --address='192.168.2.192:6379'
     vars:
      ansible_python_interpreter: /home/ubuntu/venv/bin/python  
     # become: true

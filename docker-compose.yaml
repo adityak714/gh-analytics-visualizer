@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  fetcher-and-q1-function:
+    build: /project/VM1
+    deploy:
+      placement:
+        constraints: [node.hostname == vm1]
+
+  q2-function:
+    build: /project/VM2
+    deploy:
+      placement:
+        constraints: [node.hostname == vm2]
+
+  q3-4-function:
+    build: /project/VM3
+    deploy:
+      placement:
+        constraints: [node.hostname == vm3]
+
+        # frontend:
+        #image: yourregistry/frontend:latest
+        #deploy:
+        #placement:
+        #constraints: [node.hostname == frontend-node]
+        #ports:
+        #- "80:80"
+
