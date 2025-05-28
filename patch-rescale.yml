@@ -1,0 +1,4 @@
+- hosts: ray-master-vm1 # To be run where the swarm was created
+  tasks:
+  - name: rescale up/down
+    command: docker service scale deii_fetcher-and-q1-function=2 # replace with the service needed, and '2' with how many replicas (can be less or more)

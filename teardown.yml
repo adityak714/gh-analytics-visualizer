@@ -4,4 +4,4 @@
     become: true
     shell: |
      sudo rm -rf /project
-     docker swarm leave --force  
+     docker swarm leave # --force  

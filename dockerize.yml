@@ -34,3 +34,4 @@
       docker node update --label-add ray.role=worker grupp12-vm-2
       docker node update --label-add ray.role=worker grupp12-vm-3
       docker node update --label-add ray.role=worker grupp12-vm-5
+      docker stack deploy -c /home/ubuntu/project/docker-compose-new.yaml de-ii

@@ -21,7 +21,7 @@
      become: true
      git:
       repo: 'https://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@github.com/adityak714/de-ii-project'
-      dest: /project
+      dest: /home/ubuntu/project
       single_branch: yes
       version: dockerize
 
@@ -90,7 +90,7 @@
    - name: Pip install Ray, Pulsar Client, others
      become: true
      pip: 
-      requirements: /project/requirements.txt
+      requirements: /home/ubuntu/project/requirements.txt
       virtualenv: /home/ubuntu/venv
       virtualenv_command: /usr/bin/python3 -m venv
 
