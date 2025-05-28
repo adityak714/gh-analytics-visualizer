@@ -53,13 +53,13 @@ These are listed in the `requirements.txt` file.
 ## How to Run
 
 1. **Setup Environment**:
-   - Ensure Docker and Pulsar are installed and configured.
+   - Ensure that Pulsar and Ansible are installed and configured.
    - Set the `GITHUB_TOKEN` environment variable with a valid GitHub token.
 
 2. **Build and Deploy**:
    - Use the `docker-compose.yaml` file to build and deploy the services:
      ```sh
-     docker-compose up --build
+     docker stack deploy -c docker-compose.yaml de-ii
      ```
 
 3. **Fetch and Process Data**:
