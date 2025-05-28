@@ -4,10 +4,4 @@
     become: true
     shell: |
      sudo rm -rf /project
-
-- hosts: ray-master-vm1
-  tasks:
-  - name: stop ray
-    shell: |
-      export PATH=/home/ubuntu/venv/bin:$PATH
-      ray stop
+     docker swarm leave --force  
