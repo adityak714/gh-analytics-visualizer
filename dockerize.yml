@@ -22,5 +22,15 @@
 - hosts: ray-worker-vm2,ray-worker-vm3,ray-worker-vm5,pulsar-master-vm4
   tasks:
   - name: docker swarm join
-    command: docker swarm join --token {{hostvars['ray-master-vm1']['swarm_token']}} 192.168.2.192:2377
+    shell: |
+      docker swarm join --token {{hostvars['ray-master-vm1']['swarm_token']}} 192.168.2.192:2377
     register: workers_reg
+
+# From the manager, specify which are worker nodes
+- hosts: ray-master-vm1
+  tasks:
+  - name: add label of workers
+    shell: |
+      docker node update --label-add ray.role=worker grupp12-vm-2
+      docker node update --label-add ray.role=worker grupp12-vm-3
+      docker node update --label-add ray.role=worker grupp12-vm-5
