@@ -1,4 +1,7 @@
-# Project Overview
+# Mini Project - 1TD076 Data Engineering II
+> Project 2. Github Analytic System using a Streaming Framework
+
+## Project Overview
 
 This project is designed to analyze GitHub repositories using distributed systems and containerized environments. It fetches repositories, processes data, and answers specific questions related to repository statistics, such as the most popular languages used in repositories with unit tests and CI/CD configurations, and the repositories with the highest number of commits.
 
