@@ -75,8 +75,10 @@ These are listed in the `requirements.txt` file.
 ## Results
 
 The project outputs:
-- The top 10 most popular languages in repositories with unit tests and CI/CD configurations.
+- The top 10 most popular languages in repositories.
 - The top 10 repositories with the highest number of commits.
+- The top 10 most popular languages in repositories with unit tests.
+- The top 10 most popular languages in repositories with unit tests and CI/CD configurations.
 
 ## Notes
 
