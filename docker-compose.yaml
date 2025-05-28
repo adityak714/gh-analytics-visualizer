@@ -2,22 +2,35 @@ version: '3.8'
 
 services:
   fetcher-and-q1-function:
-    build: /project/VM1
+    image: fetcher-and-q1
+    build: 
+      context: /project/VM1
+      dockerfile: /project/VM1/Dockerfile
     deploy:
       placement:
-        constraints: [node.hostname == vm1]
+        constraints: [node.hostname == grupp12-vm-1]
 
   q2-function:
-    build: /project/VM2
+    image: q2-function
+    build: 
+      context: /project/VM2
+      dockerfile: /project/VM2/Dockerfile
     deploy:
       placement:
-        constraints: [node.hostname == vm2]
+        constraints: [node.hostname == grupp12-vm-2]
+    depends_on:
+      - fetcher-and-q1
 
   q3-4-function:
-    build: /project/VM3
+    image: q3-4-function
+    build: 
+      context: /project/VM3
+      dockerfile: /project/VM3/Dockerfile
     deploy:
       placement:
-        constraints: [node.hostname == vm3]
+        constraints: [node.hostname == grupp12-vm-3]
+    depends_on:
+      - fetcher-and-q1
 
         # frontend:
         #image: yourregistry/frontend:latest
