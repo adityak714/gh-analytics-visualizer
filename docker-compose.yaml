@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  fetcher-and-q1-function:
+    image: fetcher-and-q1
+    build: 
+      context: /project/VM1
+      dockerfile: /project/VM1/Dockerfile
+    deploy:
+      placement:
+        constraints: [node.hostname == grupp12-vm-1]
+    depends_on:
+    - ray-head
+
+  q2-function:
+    image: q2-function
+    build: 
+      context: /project/VM2
+      dockerfile: /project/VM2/Dockerfile
+    deploy:
+      placement:
+        constraints: [node.hostname == grupp12-vm-2]
+    depends_on:
+      - fetcher-and-q1
+      - ray-head
+
+  q3-4-function:
+    image: q3-4-function
+    build: 
+      context: /project/VM3
+      dockerfile: /project/VM3/Dockerfile
+    deploy:
+      placement:
+        constraints: [node.hostname == grupp12-vm-3]
+    depends_on:
+      - fetcher-and-q1
+      - ray-head
+
+  ray-head:
+    image: rayproject/ray:2.46.0
+    command: >
+      ray start --head --port=6379 --dashboard-host 0.0.0.0
+    ports:
+      - "6379:6379"    
+      - "8265:8265"    
+    deploy:
+      placement:
+        constraints: [node.hostname == grupp12-vm-1]
+
+  ray-worker:
+    image: rayproject/ray:latest
+    command: >
+      ray start --address=ray-head:6379
+    deploy:
+      placement:
+        constraints:
+          - node.labels.ray.role == worker
+    depends_on:
+      - ray-head
+
