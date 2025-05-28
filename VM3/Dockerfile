@@ -1,6 +1,6 @@
 FROM python:3.9.22-bullseye
 ENV GITHUB_TOKEN="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"
-WORKDIR /home/ubuntu/de-ii-project
+WORKDIR /home/ubuntu/project
 
 # RUN apt-get update && apt-get install -y build-essential
 
