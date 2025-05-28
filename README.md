@@ -67,7 +67,7 @@ These are listed in the `requirements.txt` file.
    - VM2 and VM3 consume the data and perform analyses.
 
 4. **Teardown**:
-   - Use the `teardown.yml` file to clean up the environment:
+   - Use the `teardown.yml` file to clean up the environment as preparation:
      ```sh
      ansible-playbook teardown.yml
      ```
