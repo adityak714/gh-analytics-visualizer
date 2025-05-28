@@ -85,3 +85,4 @@ The project outputs:
 
 - Ensure the GitHub token has sufficient permissions to access the API.
 - The project uses Ray for distributed processing, which requires a cluster setup.
+- Inspect the current running Swarm by doing `docker stack services de-ii` (if name of the Swarm is 'de-ii')
